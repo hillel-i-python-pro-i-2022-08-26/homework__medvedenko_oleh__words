@@ -18,7 +18,13 @@ def init_logger() -> Logger:
 
 
 class Combinator:
-    def __init__(self, alphabet: Iterable, str_len: int, purge_after: bool = True, logger: Logger = init_logger()):
+    def __init__(
+        self,
+        alphabet: Iterable,
+        str_len: int,
+        purge_after: bool = True,
+        logger: Logger = init_logger(),
+    ):
         self.alphabet = alphabet
         self.str_len = str_len
         self.purge_after = purge_after
@@ -31,14 +37,22 @@ class Combinator:
             result = pool.map(self._get_for_char, self.alphabet)
             self.logger.info("[PROCESS] List of filenames received [PROCESS]")
             for name in result:
-                self.logger.info(f"[PROCESS] Extracting combinations from {name} [PROCESS]")
-                with open(STORAGE.joinpath("result/result.txt"), mode="a") as file_result:
+                self.logger.info(
+                    f"[PROCESS] Extracting combinations from {name} [PROCESS]"
+                )
+                with open(
+                    STORAGE.joinpath("result/result.txt"), mode="a"
+                ) as file_result:
                     with open(name) as producer:
                         file_result.write(producer.read())
         if self.purge_after:
-            self.logger.info("[CLEANING] Purging created .txt files in storage [CLEANING]")
+            self.logger.info(
+                "[CLEANING] Purging created .txt files in storage [CLEANING]"
+            )
             Combinator.purge_files()
-        self.logger.info("[END] All combinations created successfully. See result.txt file [END]")
+        self.logger.info(
+            "[END] All combinations created successfully. See result.txt file [END]"
+        )
 
     def combinations_generator(self, char):
         for starter_combination in product(self.alphabet, repeat=self.str_len - 1):
@@ -51,7 +65,9 @@ class Combinator:
         file_name = STORAGE.joinpath(f"{uuid.uuid4()}.txt")
         result = self.combinations_generator(char)
         with open(file_name, mode="w") as file:
-            file.write(Combinator.writer("".join(combination) for combination in result))
+            file.write(
+                Combinator.writer("".join(combination) for combination in result)
+            )
         return file_name
 
     def pre_clean(self):
