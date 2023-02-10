@@ -26,8 +26,7 @@ class Combinator:
         logger: Logger = init_logger(),
     ):
         self.alphabet = alphabet
-        self.str_len = str_len
-        assert str_len > 0, "Number of repeats must be positive!"
+        self.str_len = abs(str_len)
         self.purge_after = purge_after
         self.logger = logger
 
