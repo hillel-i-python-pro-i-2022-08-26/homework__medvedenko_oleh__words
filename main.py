@@ -27,32 +27,35 @@ class Combinator:
     ):
         self.alphabet = alphabet
         self.str_len = str_len
+        assert str_len > 0, "Number of repeats must be positive!"
         self.purge_after = purge_after
         self.logger = logger
 
     def product(self):
         self.logger.info("[START] Combining started [START]")
         self.pre_clean()
-        with Pool(processes=multiprocessing.cpu_count() - 1) as pool:
-            result = pool.map(self._get_for_char, self.alphabet)
-            self.logger.info("[PROCESS] List of filenames received [PROCESS]")
-            for name in result:
+        try:
+            with Pool(processes=multiprocessing.cpu_count() - 1) as pool:
+                result = pool.map(self._get_for_char, self.alphabet)
+                self.logger.info("[PROCESS] List of filenames received [PROCESS]")
+                for name in result:
+                    self.logger.info(
+                        f"[PROCESS] Extracting combinations from {name} [PROCESS]"
+                    )
+                    with open(
+                        STORAGE.joinpath("result/result.txt"), mode="a"
+                    ) as file_result:
+                        with open(name) as producer:
+                            file_result.write(producer.read())
+        finally:
+            if self.purge_after:
                 self.logger.info(
-                    f"[PROCESS] Extracting combinations from {name} [PROCESS]"
+                    "[CLEANING] Purging created .txt files in storage [CLEANING]"
                 )
-                with open(
-                    STORAGE.joinpath("result/result.txt"), mode="a"
-                ) as file_result:
-                    with open(name) as producer:
-                        file_result.write(producer.read())
-        if self.purge_after:
+                Combinator.purge_files()
             self.logger.info(
-                "[CLEANING] Purging created .txt files in storage [CLEANING]"
+                "[END] All combinations created successfully. See result.txt file [END]"
             )
-            Combinator.purge_files()
-        self.logger.info(
-            "[END] All combinations created successfully. See result.txt file [END]"
-        )
 
     def combinations_generator(self, char):
         for starter_combination in product(self.alphabet, repeat=self.str_len - 1):
