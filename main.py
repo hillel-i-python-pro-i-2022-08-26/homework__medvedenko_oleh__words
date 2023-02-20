@@ -16,10 +16,10 @@ def init_logger() -> logging.Logger:
 
 class Combinator:
     def __init__(
-        self,
-        alphabet: Iterable,
-        str_len: int,
-        logger: logging.Logger = init_logger(),
+            self,
+            alphabet: Iterable,
+            str_len: int,
+            logger: logging.Logger = init_logger(),
     ):
         self.alphabet = alphabet
         self.str_len = abs(str_len)
@@ -34,7 +34,7 @@ class Combinator:
         )
 
     async def _generate_combinations_recursive(
-        self, prefix: str
+            self, prefix: str
     ) -> AsyncGenerator[str, None]:
         if len(prefix) == self.str_len:
             yield prefix
