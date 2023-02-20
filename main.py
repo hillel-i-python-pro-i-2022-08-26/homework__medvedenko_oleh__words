@@ -16,10 +16,10 @@ def init_logger() -> logging.Logger:
 
 class Combinator:
     def __init__(
-            self,
-            alphabet: Iterable,
-            str_len: int,
-            logger: logging.Logger = init_logger(),
+        self,
+        alphabet: Iterable,
+        str_len: int,
+        logger: logging.Logger = init_logger(),
     ):
         self.alphabet = alphabet
         self.str_len = abs(str_len)
@@ -34,14 +34,16 @@ class Combinator:
         )
 
     async def _generate_combinations_recursive(
-            self, prefix: str
+        self, prefix: str
     ) -> AsyncGenerator[str, None]:
         if len(prefix) == self.str_len:
             yield prefix
             return
 
         for char in self.alphabet:
-            async for combination in self._generate_combinations_recursive(prefix + char):
+            async for combination in self._generate_combinations_recursive(
+                prefix + char
+            ):
                 yield combination
                 # self.logger.info(combination)
 
@@ -50,7 +52,9 @@ async def main():
     repeats = 3
     alphabet_for_combinations = ascii_lowercase + digits
     combinator = Combinator(alphabet_for_combinations, repeats)
-    async with aiofiles.open(STORAGE.joinpath("result/result.txt"), mode="w") as file_result:
+    async with aiofiles.open(
+        STORAGE.joinpath("result/result.txt"), mode="w"
+    ) as file_result:
         async for combination in combinator.generate_combinations():
             await file_result.write(combination + "\n")
 
