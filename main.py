@@ -35,7 +35,7 @@ class Combinator:
         self.pre_clean()
         try:
             with Pool(processes=multiprocessing.cpu_count() - 1) as pool:
-                result = pool.map(self._get_for_char, self.alphabet)
+                result = pool.imap_unordered(self._get_for_char, self.alphabet, chunksize=1000)
                 self.logger.info("[PROCESS] List of filenames received [PROCESS]")
                 for name in result:
                     self.logger.info(
@@ -90,7 +90,7 @@ class Combinator:
 
 
 if __name__ == "__main__":
-    repeats = 5
+    repeats = 6
     alphabet_for_combinations = ascii_lowercase + digits
     combinator = Combinator(alphabet_for_combinations, repeats, purge_after=True)
     combinator.product()
