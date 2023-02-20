@@ -43,6 +43,7 @@ class Combinator:
         for char in self.alphabet:
             async for combination in self._generate_combinations_recursive(prefix + char):
                 yield combination
+                # self.logger.info(combination)
 
 
 async def main():
